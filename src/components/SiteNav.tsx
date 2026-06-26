@@ -13,22 +13,35 @@ type Props = {
   ctaLabel?: string;
 };
 
-export default function SiteNav({ className, ctaLabel = "Build signature" }: Props) {
+export default function SiteNav({
+  className,
+  ctaLabel = "Build signature",
+}: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <nav className={cn("glass-panel relative rounded-xl px-4 py-3", className)}>
       <div className="flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3" aria-label="Scholaro home">
+        <Link
+          href="/"
+          className="flex items-center gap-3"
+          aria-label="Scholaro home"
+        >
           <span className="grid h-9 w-9 place-items-center rounded-md bg-accent text-sm font-semibold text-white shadow-[0_0_24px_rgba(94,106,210,0.4),inset_0_1px_0_rgba(255,255,255,0.25)]">
             S
           </span>
-          <span className="font-display text-lg font-semibold tracking-tight">Scholaro</span>
+          <span className="font-display text-lg font-semibold tracking-tight">
+            Scholaro
+          </span>
         </Link>
 
         <div className="hidden items-center gap-7 font-ui text-sm text-foreground-muted md:flex">
           {navLinks.map((linkItem) => (
-            <Link key={linkItem.href} className="transition-colors hover:text-ink" href={linkItem.href}>
+            <Link
+              key={linkItem.href}
+              className="transition-colors hover:text-ink"
+              href={linkItem.href}
+            >
               {linkItem.label}
             </Link>
           ))}
@@ -79,7 +92,16 @@ export default function SiteNav({ className, ctaLabel = "Build signature" }: Pro
 
 function IconMenu() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      aria-hidden
+    >
       <path d="M4 7h16M4 12h16M4 17h16" />
     </svg>
   );
@@ -87,7 +109,16 @@ function IconMenu() {
 
 function IconClose() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      aria-hidden
+    >
       <path d="M6 6l12 12M18 6L6 18" />
     </svg>
   );

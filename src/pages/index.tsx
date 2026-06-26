@@ -69,15 +69,15 @@ export default function Home() {
                   </div>
                   <div className="rounded-sm bg-white p-4 text-[#111111]">
                     <p className="font-sans text-[17px] font-bold leading-tight">
-                      Hamid Reza Alami
+                      Hamid Alami
                     </p>
                     <p className="mt-1 font-sans text-[13px] text-[#444444]">
-                      Software Engineering Student
+                      Software Development Student
                     </p>
                     <p className="mt-3 border-l-4 border-[#5E6AD2] pl-3 font-sans text-[12px] leading-5 text-[#333333]">
-                      School of Computer Science
+                      School of Information Technology
                       <br />
-                      Example University
+                      Adelaide University
                       <br />
                       hamid.alami@example.edu.au
                     </p>
@@ -135,7 +135,7 @@ export default function Home() {
             <Reveal className="max-w-2xl">
               <p className="eyebrow">Why it works</p>
               <h2 className="gradient-text mt-3 font-display text-3xl font-semibold leading-tight tracking-[-0.02em] sm:text-4xl">
-                A modern editor. Deliberately old-school output.
+                A modern editor. Deliberately Academic ready output.
               </h2>
             </Reveal>
 
@@ -148,7 +148,7 @@ export default function Home() {
                       The editor and the signature are two separate systems.
                     </h3>
                     <p className="mt-4 max-w-lg font-ui text-base leading-relaxed text-foreground-muted">
-                      The editor can use a modern dark interface — glass, depth,
+                      The editor use a modern dark interface — glass, depth,
                       motion. The signature it exports stays conservative on
                       purpose: inline styles, table layout, plain links, fixed
                       dimensions, and no JavaScript. That separation is exactly
@@ -299,7 +299,7 @@ function MockEmail() {
       <div className="space-y-px overflow-hidden rounded-t-md border border-white/[0.08] bg-background-elevated font-ui text-[13px]">
         <div className="flex gap-3 border-b border-white/[0.06] px-4 py-2.5">
           <span className="w-16 shrink-0 text-foreground-subtle">To</span>
-          <span className="text-ink">jordan.lee@university.edu</span>
+          <span className="text-ink">user.exmaple@university.edu</span>
         </div>
         <div className="flex gap-3 px-4 py-2.5">
           <span className="w-16 shrink-0 text-foreground-subtle">Subject</span>
@@ -309,7 +309,7 @@ function MockEmail() {
 
       {/* Email body (white paper) */}
       <div className="rounded-b-md border border-t-0 border-white/[0.08] bg-white p-6 text-[#1a1a1a]">
-        <p className="font-sans text-[14px] leading-6">Hi Jordan,</p>
+        <p className="font-sans text-[14px] leading-6">Hi User,</p>
         <p className="mt-3 font-sans text-[14px] leading-6 text-[#333333]">
           Thanks for sending the draft through. I&apos;ve left comments on
           chapters two and three — overall it&apos;s looking strong. Happy to
@@ -322,18 +322,16 @@ function MockEmail() {
         {/* The signature — same email-safe layout you export */}
         <div className="mt-5">
           <p className="font-sans text-[16px] font-bold leading-tight text-[#111111]">
-            Hamid Reza Alami
+            Your Name
           </p>
-          <p className="mt-1 font-sans text-[13px] text-[#444444]">
-            Software Engineering Student
-          </p>
+          <p className="mt-1 font-sans text-[13px] text-[#444444]">Your role</p>
           <div className="mt-3 border-l-4 border-[#5E6AD2] pl-3 font-sans text-[12px] leading-5 text-[#333333]">
-            School of Computer Science
+            Your school of sutdy
             <br />
-            Example University
+            Your University
             <br />
             <span className="text-[#5E6AD2] underline">
-              hamid.alami@example.edu.au
+              youname@example.edu.au
             </span>
           </div>
         </div>

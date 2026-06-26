@@ -26,7 +26,8 @@ export default function GeneratePage() {
                 Build, preview, and export your email-safe signature.
               </h1>
               <p className="mt-4 max-w-2xl font-ui text-base leading-relaxed text-foreground-muted">
-                Choose a template, fill in the fields that matter, then copy rich HTML or download the source.
+                Choose a template, fill in the fields that matter, then copy
+                HTML or download the source.
               </p>
             </div>
           </header>

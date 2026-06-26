@@ -1,17 +1,18 @@
 import { SignatureData } from "./types";
 
 export const academicSample: SignatureData = {
-  fullName: "Hamid Reza Alami",
+  fullName: "John Smith",
   pronouns: "",
   role: "Software Engineering Student",
   department: "School of Computer Science",
   organization: "Example University",
   degree: "Bachelor of Information Technology",
   studentId: "A1234567",
-  researchArea: "Accessible web tooling, email compatibility, and AI-assisted software engineering",
-  email: "hamid.alami@example.edu.au",
+  researchArea:
+    "Accessible web tooling, open-sourced project, and AI-assisted software engineering",
+  email: "john@example.edu.au",
   phone: "+61 400 123 456",
-  website: "https://example.edu.au/profile/hamid",
+  website: "https://example.edu.au/profile/john",
   location: "Adelaide, Australia",
   linkedin: "https://linkedin.com/in/yourprofile",
   github: "https://github.com/yourusername",
@@ -24,9 +25,10 @@ export const academicSample: SignatureData = {
   disclaimerRegion: "au",
 };
 
+// Example of a pre defined template.
 export const professionalSample: SignatureData = {
-  fullName: "Avery Chen",
-  pronouns: "they/them",
+  fullName: "Sara Smith",
+  pronouns: "She/her",
   role: "Senior Product Engineer",
   department: "Platform Team",
   organization: "Northline Digital",
@@ -47,4 +49,3 @@ export const professionalSample: SignatureData = {
   accentColor: "#CC0000",
   disclaimerRegion: "us",
 };
-
