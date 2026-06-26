@@ -502,6 +502,7 @@ luac.out
 # --- Next.js ---
 .next/
 out/
+tsconfig.tsbuildinfo
 
 # --- Nuxt.js ---
 .nuxt/
@@ -758,6 +759,7 @@ temp/
 .turbo/
 
 # --- AI / ML ---
+.claude/
 *.h5
 *.hdf5
 *.pkl

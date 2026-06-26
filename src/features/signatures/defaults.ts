@@ -1,0 +1,25 @@
+import { SignatureData } from "./types";
+
+export const defaultSignatureData: SignatureData = {
+  fullName: "You Full Name",
+  pronouns: "",
+  role: "Software Development Student",
+  department: "School of Information Technology",
+  organization: "Your University",
+  degree: "Bachelor of Information Technology",
+  studentId: "",
+  researchArea: "Web engineering, accessibility, and AI-assisted tools",
+  email: "hamid@example.edu.au",
+  phone: "+61 400 123 456",
+  website: "https://example.com",
+  location: "Adelaide, Australia",
+  linkedin: "https://linkedin.com/in/yourprofile",
+  github: "https://github.com/yourusername",
+  orcid: "",
+  googleScholar: "",
+  bookingUrl: "",
+  photoUrl: "",
+  logoUrl: "",
+  accentColor: "#111111",
+  disclaimerRegion: "au",
+};

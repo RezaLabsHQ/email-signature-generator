@@ -1,93 +1,137 @@
-# 📬 Email Signature Generator (Open Source)
+# Scholaro — Email Signature Generator
 
-A modern, open-source, and 100% free web app to generate professional email signatures — perfect for students, developers, freelancers, and professionals. Live preview, export options, photo support, and regional legal disclaimers included.
+A Next.js app for building clean, email-client-safe signatures for academics and professionals.
+Pick a template, fill in your details, and copy or download HTML that pastes cleanly into Gmail,
+Outlook, and Apple Mail. Everything runs in the browser — no account, no upload.
 
-## 🚀 Features
+## Stack
 
-- ✨ Step-by-step wizard UI (modern multi-step form)
-- 👤 Personal, education, and social info inputs
-- 🖼️ Live signature preview with photo support
-- 🔁 Auto-updates as you type
-- 🎨 Multiple layout templates (coming soon)
-- 🌗 Optional dark mode (coming soon)
-- 📄 Disclaimer support (AU/US/EU toggle planned)
-- ⬇️ Download signature as HTML
-- 📋 Copy raw HTML to clipboard
-- 🧱 Built with **Next.js**, **TypeScript**, **TailwindCSS**
+- Next.js 16 (Pages Router)
+- React 19
+- TypeScript (strict)
+- Tailwind CSS 4
+- ESLint 9 (flat config)
 
-## 🧰 Tech Stack
+## How It Works
 
-- [Next.js](https://nextjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/) (animations coming soon)
+The product is built around one deliberate boundary: **the editor and the exported signature are
+separate systems.**
 
-## 🔧 Getting Started
+- The **app UI** can be modern — dark theme, glass panels, subtle motion.
+- The **exported signature** is conservative on purpose: table layout, inline CSS, web-safe fonts,
+  explicit image dimensions, plain links, and no JavaScript. That is what makes it survive picky
+  email clients.
 
-```bash
-git clone https://github.com/alahy011/email-signature-generator.git
-cd email-signature-generator
-npm install
-npm run dev
-```
+The app is three routes:
 
-Open [http://localhost:3000](http://localhost:3000) to use the app.
+- `/` — landing page (hero, a mock-email example, a feature bento, and per-client setup tips).
+- `/generate` — the builder, laid out like a console: a sticky template rail on the left, the form
+  in the center, and a sticky live preview + export panel on the right.
+- `/privacy` — privacy policy (Australia / Privacy Act 1988 and EU/UK GDPR).
 
-## 📂 Project Structure
+The UI is built from a small set of shared primitives: `Shell` (the ambient dark canvas), `SiteNav`,
+`SiteFooter`, and `SpotlightCard` / `Reveal` for the mouse-tracking glow and scroll-in animations.
+All motion is plain CSS + a little vanilla JS — no animation library.
 
-```
+## Architecture
+
+```txt
 src/
 ├── components/
-│   ├── MultiStepForm.tsx
-│   ├── steps/
-│   │   ├── StepPersonal.tsx
-│   │   ├── StepEducation.tsx
-│   │   ├── StepSocials.tsx
-│   │   └── StepPreview.tsx
+│   ├── Shell.tsx                  # ambient dark canvas (gradients, noise, blobs)
+│   ├── SiteNav.tsx                # shared top navigation
+│   ├── SiteFooter.tsx             # shared footer (developer info + privacy link)
+│   ├── generator/
+│   │   ├── SignatureBuilder.tsx   # composes rail + form + preview, owns state
+│   │   ├── TemplatePicker.tsx
+│   │   ├── SignatureForm.tsx
+│   │   ├── SignaturePreview.tsx
+│   │   └── ExportPanel.tsx        # copy / download / copy-source
+│   └── ui/
+│       ├── Button.tsx
+│       ├── Field.tsx
+│       ├── TemplateCard.tsx
+│       ├── SpotlightCard.tsx      # cursor-tracking glow card
+│       └── Reveal.tsx             # IntersectionObserver scroll-in
+├── features/
+│   └── signatures/
+│       ├── types.ts               # SignatureData, SignatureTemplate
+│       ├── defaults.ts
+│       ├── samples.ts             # academic / professional sample data
+│       ├── validation.ts          # required fields, email, URLs, hex color
+│       ├── templates/             # template registry (one file per template)
+│       │   ├── basicAcademic.ts
+│       │   ├── academicResearch.ts
+│       │   ├── compactProfessional.ts
+│       │   ├── professionalMinimal.ts
+│       │   ├── photoProfile.ts
+│       │   ├── executiveBranded.ts
+│       │   ├── utils.ts           # escapeHtml / safeUrl / safeHexColor helpers
+│       │   └── index.ts
+│       └── export/
+│           ├── buildHtml.ts
+│           ├── copySignature.ts
+│           └── downloadSignature.ts
+├── lib/
+│   ├── cn.ts
+│   └── site.ts                    # site + developer details (single source of truth)
 ├── pages/
-│   └── index.tsx
+│   ├── _app.tsx
+│   ├── _document.tsx              # Google Fonts
+│   ├── index.tsx                  # landing page
+│   ├── generate.tsx               # signature builder
+│   └── privacy.tsx                # privacy policy (AU + EU/UK)
+└── styles/
+    └── globals.css                # design tokens + reusable surface/motion classes
 ```
 
-## 🌐 Live Demo
+### Templates
 
-WIll be available soon.
+Each template is a small object with metadata and a renderer:
 
-## 🙌 Contributing
-
-Pull requests welcome! Whether it's fixing typos, adding new features, or improving accessibility — we appreciate your input.
-
-## 🆓 License
-
-This project is licensed under the **MIT License**. Feel free to use, modify, and share.
-
----
-
-Made with ❤️ by Hamid Reza Alami
-
----
-
-# 📄 LICENSE (MIT)
-
+```ts
+type SignatureTemplate = {
+  id: string;
+  name: string;
+  category: "academic" | "professional" | "advanced";
+  description: string;
+  supportsPhoto: boolean;
+  supportsLogo: boolean;
+  renderHtml: (data: SignatureData) => string;
+};
 ```
-MIT License
 
-Copyright (c) 2025 Hamid Reza Alami
+To add a template: create a file under `features/signatures/templates/`, build the HTML with the
+helpers in `utils.ts` (always run user input through `escapeHtml` / `safeUrl` / `safeHexColor`), and
+register it in `templates/index.ts`.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+### Email-safe output rules
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Exported HTML sticks to: table layout, inline CSS, web-safe fonts, explicit image width/height,
+absolute image URLs, simple links with readable text, no JavaScript, no external CSS, no flexbox/grid,
+and no emoji for meaningful icons.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## Security
+
+- All user input is HTML-escaped and URL-validated in `templates/utils.ts` before it reaches the
+  preview's `dangerouslySetInnerHTML`. Only `http(s):`, `mailto:`, and `tel:` URLs are allowed, and
+  control characters are stripped from URLs.
+- `next.config.ts` sets a Content-Security-Policy plus `X-Content-Type-Options`, `X-Frame-Options`,
+  `Referrer-Policy`, and `Permissions-Policy` as defense-in-depth.
+- No backend, no analytics, no cookies, no local storage. Nothing you type leaves the browser. The
+  `/privacy` page documents this and the only third parties involved in serving the page (the host
+  and Google Fonts).
+
+## Configuration
+
+Personal details (developer name, contact email, social/repo links, privacy "last updated" date) live
+in one place — `src/lib/site.ts`. Update them there and the footer and privacy page both follow.
+
+## Development
+
+```bash
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build
+npm run lint
 ```

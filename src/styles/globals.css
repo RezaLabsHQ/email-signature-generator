@@ -1,26 +1,425 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Backgrounds — deep space, never pure black */
+  --background: #050506;
+  --background-deep: #020203;
+  --background-elevated: #0a0a0c;
+
+  /* Text — bright but never pure white */
+  --foreground: #ededef;
+  --ink: #ededef;
+  --foreground-muted: #8a8f98;
+  --foreground-subtle: rgba(255, 255, 255, 0.6);
+
+  /* Accent — single saturated indigo */
+  --accent: #5e6ad2;
+  --accent-bright: #6872d9;
+  --accent-glow: rgba(94, 106, 210, 0.3);
+
+  /* Surfaces & borders */
+  --paper: #0a0a0c;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.1);
+  --border-accent: rgba(94, 106, 210, 0.3);
+
+  /* Motion */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-deep: var(--background-deep);
+  --color-background-elevated: var(--background-elevated);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--surface);
+  --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --font-display: "Inter", "Geist Sans", system-ui, sans-serif;
+  --font-body: "Inter", "Geist Sans", system-ui, sans-serif;
+  --font-ui: "Inter", "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", "Courier New", monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", "Helvetica Neue", sans-serif;
+}
+
+::selection {
+  background: rgba(94, 106, 210, 0.45);
+  color: #ffffff;
+}
+
+/* ----------------------------------------------------------------------------
+   Background system — layered ambient lighting
+---------------------------------------------------------------------------- */
+
+.ambient-shell {
+  position: relative;
+  /* clip (not hidden) so the blobs are contained without creating a scroll
+     container — that would break position: sticky inside the builder. */
+  overflow: clip;
+  background:
+    radial-gradient(ellipse at top, #0a0a0f 0%, #050506 50%, #020203 100%),
+    #050506;
+}
+
+/* Grid overlay — technical precision */
+.ambient-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.02;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.7) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+
+/* Noise texture — tactile, prevents banding */
+.ambient-shell::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+}
+
+/* Animated gradient blobs — cinematic light pools */
+.ambient-blob {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 9999px;
+  animation: float 9s ease-in-out infinite;
+}
+
+.ambient-blob-one {
+  left: 50%;
+  top: -420px;
+  width: 1100px;
+  height: 900px;
+  transform: translateX(-50%);
+  background: rgba(94, 106, 210, 0.22);
+  filter: blur(150px);
+}
+
+.ambient-blob-two {
+  left: -220px;
+  top: 380px;
+  width: 640px;
+  height: 760px;
+  background: rgba(168, 85, 247, 0.13);
+  filter: blur(130px);
+  animation-delay: -3s;
+}
+
+.ambient-blob-three {
+  right: -200px;
+  top: 220px;
+  width: 560px;
+  height: 700px;
+  background: rgba(56, 130, 246, 0.12);
+  filter: blur(120px);
+  animation-delay: -5s;
+}
+
+/* ----------------------------------------------------------------------------
+   Surfaces — multi-layer depth
+---------------------------------------------------------------------------- */
+
+.glass-panel {
+  position: relative;
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 24px 80px rgba(0, 0, 0, 0.45),
+    0 0 80px rgba(94, 106, 210, 0.06);
+  backdrop-filter: blur(18px);
+}
+
+.glass-panel::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 11px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 26%);
+}
+
+/* Square-cornered panel — the structured builder surface */
+.panel-flat {
+  position: relative;
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 24px 80px rgba(0, 0, 0, 0.45),
+    0 0 80px rgba(94, 106, 210, 0.06);
+  backdrop-filter: blur(18px);
+}
+
+.panel-flat::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  pointer-events: none;
+  border-radius: 15px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 22%);
+}
+
+/* Base elevated card: border highlight + soft diffuse + ambient darkness */
+.surface-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 2px 20px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 280ms var(--ease-expo),
+    border-color 280ms var(--ease-expo),
+    box-shadow 280ms var(--ease-expo);
+}
+
+/* Top-edge inner highlight */
+.surface-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 24%);
+}
+
+/* Square variant — for the structured builder / form surfaces */
+.surface-card.is-square {
+  border-radius: 0;
+}
+
+.surface-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-hover);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 8px 40px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(94, 106, 210, 0.1);
+}
+
+/* Mouse-tracking spotlight — radial glow following the cursor */
+.spotlight-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  background: radial-gradient(
+    300px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(94, 106, 210, 0.15),
+    transparent 65%
+  );
+}
+
+.spotlight-host:hover .spotlight-overlay {
+  opacity: 1;
+}
+
+/* Content sits above overlay + highlight */
+.spotlight-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Legacy alias kept for any remaining usages */
+.glass-card {
+  position: relative;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.025),
+    0 10px 34px rgba(0, 0, 0, 0.32);
+  transition:
+    transform 240ms var(--ease-expo),
+    border-color 240ms var(--ease-expo),
+    box-shadow 240ms var(--ease-expo);
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-hover);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 18px 50px rgba(0, 0, 0, 0.42),
+    0 0 80px rgba(94, 106, 210, 0.12);
+}
+
+/* ----------------------------------------------------------------------------
+   Inputs — refined, with accent focus glow
+---------------------------------------------------------------------------- */
+
+.field-input {
+  width: 100%;
+  border: 1px solid var(--border-hover);
+  border-radius: 8px;
+  background: #0f0f12;
+  padding: 0.625rem 0.8rem;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  color: #f1f1f4;
+  outline: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition:
+    border-color 180ms var(--ease-expo),
+    box-shadow 180ms var(--ease-expo),
+    background 180ms var(--ease-expo);
+}
+
+.field-input::placeholder {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.field-input:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.field-input:focus {
+  border-color: rgba(94, 106, 210, 0.7);
+  background: #101015;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 0 0 3px rgba(94, 106, 210, 0.22),
+    0 0 24px rgba(94, 106, 210, 0.18);
+}
+
+/* ----------------------------------------------------------------------------
+   Buttons — shine sweep on hover
+---------------------------------------------------------------------------- */
+
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.18) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 650ms var(--ease-expo);
+}
+
+.btn-shine:hover::after {
+  transform: translateX(120%);
+}
+
+/* ----------------------------------------------------------------------------
+   Typography & dividers
+---------------------------------------------------------------------------- */
+
+.gradient-text {
+  background: linear-gradient(180deg, #ffffff 0%, #f4f4ff 42%, rgba(237, 237, 240, 0.7) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--accent-bright);
+}
+
+.section-rule {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+/* ----------------------------------------------------------------------------
+   Motion
+---------------------------------------------------------------------------- */
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-18px);
+  }
+}
+
+.ambient-blob-one {
+  animation-name: float-center;
+}
+
+@keyframes float-center {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-18px);
+  }
+}
+
+/* Scroll-reveal entrance */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 600ms var(--ease-expo),
+    transform 600ms var(--ease-expo);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }
